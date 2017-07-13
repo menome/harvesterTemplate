@@ -41,7 +41,6 @@ function rabbitConnect() {
 }
 
 function publishMessage(msg) {
-  console.log(msg)
   if(!rabbitChannel) return Promise.resolve(false);
   var messageBuffer = new Buffer(JSON.stringify(msg));
   return rabbitChannel.publish(conf.rabbit.exchange,conf.rabbit.routingKey,messageBuffer)
