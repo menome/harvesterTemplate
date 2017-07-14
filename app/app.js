@@ -8,6 +8,7 @@ var http = require('http');
 var port = process.env.PORT || 3000;
 var conf = require('./config');
 var rabbit = require('./rabbit');
+var harvester = require('./harvester');
 
 function app(testMode=false) {
   var app = express();
@@ -19,39 +20,8 @@ function app(testMode=false) {
   });
 
   app.post('/sync', function(req,res,next) {
-    rabbit.publishMessage({
-      "Name":"Dave Demo",
-      "NodeType":"Employee",
-      "Priority": 1,
-      "ConformedDimensions": {
-        "Email": "ddemo@menome.com",
-        "EmployeeId": 12345
-      },
-      "Properties": {
-        "Status":"active"
-      },
-      "Connections": [
-        {
-          "Name": "Menome Victoria",
-          "NodeType": "Office",
-          "RelType": "LocatedInOffice",
-          "ForwardRel": true,
-          "ConformedDimensions": {
-            "City": "Victoria"
-          }
-        },
-        {
-          "Name": "theLink",
-          "NodeType": "Project",
-          "RelType": "WorkedOnProject",
-          "ForwardRel": true,
-          "ConformedDimensions": {
-            "Code": "5"
-          }
-        }
-      ]
-    })
-    return res.send("Starting full sync");
+    res.send("Starting full sync");
+    return harvester.harvestAll();
   })
 
   rabbit.subscribe();

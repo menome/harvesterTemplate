@@ -10,7 +10,7 @@
     "express": "latest",
     "ajv": "^5.2.2",
     "amqplib": "^0.5.1",
-    "request":"latest"
+    "request-promise":"latest"
   },
   "devDependencies": {
     "mocha": "^3.4.2",
