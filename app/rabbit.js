@@ -26,11 +26,16 @@ function rabbitConnect() {
   log.info("Attempting to connect to RMQ.");
   amqp.connect(conf.rabbit.url)
     .then(function(conn) {
+      conn.on('error', function(err) {
+        conn.close();
+        rabbitChannel = null;
+        rabbitConnectInterval = setInterval(rabbitConnect, 5000);
+      });
       log.info("Connected to RMQ");
       return conn.createChannel();
     })
     .then(function(channel) {
-      log.info("Created channel")
+      log.info("Created channel for publishing")
       clearInterval(rabbitConnectInterval); // Stop scheduling this task if it's finished.
       rabbitChannel = channel;
       return channel.assertExchange(conf.rabbit.exchange, 'topic', {durable: true});
