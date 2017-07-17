@@ -1,9 +1,9 @@
 /**
  * The core harvester code
  */
-var rabbit = require('./rabbit');
+var rabbit = require('./harvester/rabbit');
 var rp = require('request-promise');
-var log = require('./logger');
+var log = require('./harvester/logger');
 var models = require('./models');
 
 module.exports = {
@@ -18,7 +18,6 @@ function harvestAll() {
   getEndpoint('https://jsonplaceholder.typicode.com/albums', models.albumTransform)
   getEndpoint('https://jsonplaceholder.typicode.com/photos', models.photoTransform)
   getEndpoint('https://jsonplaceholder.typicode.com/todos', models.todoTransform)
-  
 }
 
 // Fetches from the URL, transforms the results using the transform function, publishes the message.

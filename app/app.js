@@ -7,8 +7,9 @@ var express = require("express");
 var http = require('http');
 var port = process.env.PORT || 3000;
 var conf = require('./config');
-var rabbit = require('./rabbit');
+var rabbit = require('./harvester/rabbit');
 var harvester = require('./harvester');
+var log = require('./harvester/logger')
 
 function app(testMode=false) {
   var app = express();
@@ -36,7 +37,7 @@ if (!module.parent) {
   var app = app();
   
   http.createServer(app).listen(port);
-  console.log("Listening on " + port);
+  log.info("Listening on " + port);
 }
 
 module.exports = app;

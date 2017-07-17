@@ -5,7 +5,7 @@
  * Handles validation of messages, as well as sending acks and nacks.
  * Calls subroutines for updating the DB.
  */
-var conf = require('./config');
+var conf = require('../config');
 var amqp = require('amqplib');
 var log = require('./logger');
 
