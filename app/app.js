@@ -10,6 +10,7 @@ var conf = require('./config');
 var rabbit = require('./harvester/rabbit');
 var harvester = require('./harvester');
 var log = require('./harvester/logger')
+var models = require('./models');
 
 function app(testMode=false) {
   var app = express();
@@ -17,7 +18,7 @@ function app(testMode=false) {
 
   // An echo endpoint.
   app.get('/', function (req, res, next) {
-    return res.send("This is a healthy data harvester service");
+    return res.json(models.harvesterMetadata);
   });
 
   app.post('/sync', function(req,res,next) {

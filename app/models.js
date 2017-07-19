@@ -5,6 +5,19 @@
 
 module.exports = {};
 
+module.exports.harvesterMetadata = {
+  "name": "JsonPlaceholder harvester",
+  "desc": "Harvests from JSON Placeholder",
+  "operations": [
+    {
+      "name": "Synchronize",
+      "path": "/sync",
+      "method": "POST",
+      "desc": "Runs a full sync from the data source, generating all messages."
+    }
+  ]
+}
+
 module.exports.userTransform = (itm) => {
   return {
     "Name": itm.name,
