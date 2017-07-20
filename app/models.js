@@ -14,6 +14,12 @@ module.exports.harvesterMetadata = {
       "path": "/sync",
       "method": "POST",
       "desc": "Runs a full sync from the data source, generating all messages."
+    },
+    {
+      "name": "SQL Synchronize",
+      "path": "/sqlsync",
+      "method": "POST",
+      "desc": "Runs a full sync from the SQL data source, generating all messages."
     }
   ]
 }
@@ -148,6 +154,98 @@ module.exports.todoTransform = (itm) => {
         "ForwardRel": true,
         "ConformedDimensions": {
           "Id": itm.userId
+        }
+      }
+    ]
+  }
+}
+
+//////////////////////////////////////
+// These are transforms for SQL tables
+//////////////////////////////////////
+
+module.exports.cityTransform = (itm) => {
+  return {
+    "Name": itm.Name,
+    "NodeType":"City",
+    "Priority": 1,
+    "ConformedDimensions": {
+      "Id": itm.ID
+    },
+    "Properties": {
+      "District":itm.District,
+      "Population":itm.Population
+    },
+    "Connections": [
+      {
+        "NodeType": "Country",
+        "RelType": "CityInCountry",
+        "ForwardRel": true,
+        "ConformedDimensions": {
+          "Code": itm.CountryCode
+        }
+      }
+    ]
+  }
+}
+
+module.exports.countryTransform = (itm) => {
+  var msg = {
+    "Name": itm.Name,
+    "NodeType":"Country",
+    "Priority": 1,
+    "ConformedDimensions": {
+      "Code": itm.Code
+    },
+    "Properties": {
+      "Continent":itm.Continent,
+      "Region":itm.Region,
+      "SurfaceArea": itm.SurfaceArea,
+      "IndepYear": itm.IndepYear,
+      "Population": itm.Population,
+      "LifeExpectancy": itm.LifeExpectancy,
+      "GNP": itm.GNP,
+      "LocalName": itm.LocalName,
+      "GovernmentForm": itm.GovernmentForm,
+      "HeadOfState": itm.HeadOfState,
+      "Code2": itm.Code2
+    },
+    "Connections": []
+  }
+
+  if(itm.Capital) {
+    msg.Connections.push({
+      "NodeType": "City",
+      "RelType": "IsCapitalOf",
+      "ForwardRel": false,
+      "ConformedDimensions": {
+        "ID": itm.Capital
+      }
+    })
+  }
+
+  return msg
+}
+
+module.exports.countryLanguageTransform = (itm) => {
+  return {
+    "Name": itm.Language,
+    "NodeType":"Language",
+    "Priority": 1,
+    "ConformedDimensions": {
+      "Id": itm.Language
+    },
+    "Properties": {
+      "IsOfficial":itm.IsOfficial,
+      "Percentage":itm.Percentage
+    },
+    "Connections": [
+      {
+        "NodeType": "Country",
+        "RelType": "LanguageSpokenByCountry",
+        "ForwardRel": true,
+        "ConformedDimensions": {
+          "Code": itm.CountryCode
         }
       }
     ]

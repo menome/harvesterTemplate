@@ -26,6 +26,11 @@ function app(testMode=false) {
     return harvester.harvestAll();
   })
 
+  app.post('/sqlsync', function(req,res,next) {
+    res.send("Starting full sync of sql database");
+    return harvester.harvestAllSQL();
+  })
+
   rabbit.subscribe();
   return app;
 }

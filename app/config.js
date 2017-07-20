@@ -12,6 +12,13 @@ var defaults = {
     routingKey: 'bucketevents.all.minio',
     exchange: 'bucketevents'
   },
+  database: {
+    host: "localhost",
+    user: "root", 
+    password: "example",
+    database: "world"
+  },
+  apiUrl: "https://jsonplaceholder.typicode.com"
 }
 
 // Merged external conf and default conf, prioritizing external conf.

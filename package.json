@@ -9,6 +9,7 @@
     "forever": "latest",
     "express": "latest",
     "ajv": "^5.2.2",
+    "mysql": "^2.13.0",
     "amqplib": "^0.5.1",
     "request-promise":"latest"
   },
