@@ -2,12 +2,14 @@
 
 This serves as a boilerplate and an example for the data harvester pattern.
 
-This example uses [JsonPlaceholder](https://jsonplaceholder.typicode.com/) as its source system
+This example uses [JsonPlaceholder](https://jsonplaceholder.typicode.com/) as its source system for a REST API, and the mysql World dataset as its source system for a SQL database.
 
 ### Usage
 This example takes all the data from the JsonPlaceholder API and converts each item to a rabbitMQ message to be consumed by [TheLink:DataRefinery](https://github.com/menome/dataRefinery).
 
 Simply send a POST request to <application root>/sync and the harvester will query the API and start pumping out RMQ messages.
+
+Sending a POST request to <application root>/sqlsync will query the SQL database and start pumping out RMQ messages.
 
 ### Example Message Format
 ```
@@ -56,6 +58,10 @@ If your source system requires keys or other things, you'll need to manually add
 #### Environment Variables:
 ```
 RABBIT_URL=the URL of the RMQ server. eg. 'amqp://rabbitmq:rabbitmq@rabbit:5672?heartbeat=3600'
+DB_HOST=URL of the database
+DB_USER=DB Username
+DB_PASSWORD=DB Password
+DB_DATABASE=Name of the SQL database on the server.
 ```
 
 #### Example JSON Configuration:
@@ -66,9 +72,12 @@ RABBIT_URL=the URL of the RMQ server. eg. 'amqp://rabbitmq:rabbitmq@rabbit:5672?
     "routingKey": "syncevents.harvester.updates",
     "exchange": "syncevents"
   },
-  "api": {
-    "baseUrl": "example",
-    "apiKey": "example"
-  }
+  "database": {
+    "host": "localhost",
+    "user": "root", 
+    "password": "password",
+    "database": "world"
+  },
+  "apiUrl": "https://jsonplaceholder.typicode.com"
 }
 ```

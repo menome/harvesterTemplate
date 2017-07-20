@@ -26,6 +26,10 @@ var mergedConf = {};
 Object.assign(mergedConf, defaults, extConf)
 
 if(process.env.RABBIT_URL) mergedConf.rabbit.url = process.env.RABBIT_URL;
+if(process.env.DB_HOST) mergedConf.database.password = process.env.DB_HOST;
+if(process.env.DB_USER) mergedConf.database.user = process.env.DB_USER;
+if(process.env.DB_PASSWORD) mergedConf.database.password = process.env.DB_PASSWORD;
+if(process.env.DB_DATABASE) mergedConf.database.database = process.env.DB_DATABASE;
 
 // Export the config.
 module.exports = mergedConf;
