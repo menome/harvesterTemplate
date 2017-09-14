@@ -226,6 +226,11 @@ In order to verify that the harvester is functioning:
 ## Developing a REST harvester:
 For a REST harvester, first order of business is to remove the SQL processing code. 
 
+### Setup API tokens and login information:
+The information regarding the endpoint, tokens and login must go into the **/app/config.js**  file
+
+Environment variables can be used to override the variables in the config as well. 
+
 
 
 
