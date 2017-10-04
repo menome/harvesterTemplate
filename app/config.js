@@ -1,35 +1,59 @@
-/*
- * Copyright (C) 2017 Menome Technologies Inc.
- *
- * Merges the external config file with environment variables and default config values.
+/**
+ * Copyright (c) 2017 Menome Technologies Inc.
+ * Configuration for the bot
  */
-var extConf = require('../config/conf');
+"use strict";
+var convict = require('convict');
+var fs = require('fs');
+var bot = require('botframework')
 
-var defaults = {
-  rabbit: {
-    enable: true,
-    url: 'amqp://rabbitmq:rabbitmq@rabbit:5672?heartbeat=3600',
-    routingKey: 'syncevents.harvester.updates.example',
-    exchange: 'syncevents'
+// Define a schema
+var config = convict({
+  url: {
+    doc: "The URL of the REST Endpoint we're grabbing",
+    format: "url",
+    default: "https://jsonplaceholder.typicode.com",
+    env: "API_URL"
   },
   database: {
-    host: "localhost",
-    user: "root", 
-    password: "example",
-    database: "world"
+    host: {
+      doc: "The database hostname or IP",
+      format: "*",
+      default: "localhost",
+      env: "DB_HOST"
+    },
+    user: {
+      doc: "The database username",
+      format: "*",
+      default: "root",
+      env: "DB_USER"
+    },
+    password: {
+      doc: "The database account password",
+      format: "*",
+      default: "example",
+      env: "DB_PASS",
+      sensitive: true
+    },
+    dbname: {
+      doc: "The name of the DB to use.",
+      format: String,
+      default: "world",
+      env: "DB_NAME"
+    },
   },
-  apiUrl: "https://jsonplaceholder.typicode.com"
+  port: bot.configSchema.port,
+  logging: bot.configSchema.logging,
+  neo4j: bot.configSchema.neo4j,
+  rabbit: bot.configSchema.rabbit,
+});
+
+// Load from file.
+if (fs.existsSync('./config/config.json')) {
+  config.loadFile('./config/config.json');
 }
 
-// Merged external conf and default conf, prioritizing external conf.
-var mergedConf = {};
-Object.assign(mergedConf, defaults, extConf)
+// Validate the config.
+config.validate({allowed: 'strict'});
 
-if(process.env.RABBIT_URL) mergedConf.rabbit.url = process.env.RABBIT_URL;
-if(process.env.DB_HOST) mergedConf.database.password = process.env.DB_HOST;
-if(process.env.DB_USER) mergedConf.database.user = process.env.DB_USER;
-if(process.env.DB_PASSWORD) mergedConf.database.password = process.env.DB_PASSWORD;
-if(process.env.DB_DATABASE) mergedConf.database.database = process.env.DB_DATABASE;
-
-// Export the config.
-module.exports = mergedConf;
+module.exports = config;

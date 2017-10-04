@@ -1,49 +1,45 @@
-/** 
- * Copyright (C) 2017 Menome Technologies Inc.  
- * 
- * A microservice that takes specifically formatted JSON messages and turns them into graph updates.
+/**
+ * Copyright (c) 2017 Menome Technologies Inc.
+ * Bot entrypoint. Initialize, configure, create HTTP endpoints, etc.
  */
-var express = require("express");
-var http = require('http');
-var port = process.env.PORT || 3000;
-var conf = require('./config');
-var rabbit = require('./harvester/rabbit');
-var harvester = require('./harvester');
-var log = require('./harvester/logger')
-var models = require('./models');
+"use strict";
+var bot = require('botframework')
+var models = require('./models.js')
+var config = require('./config.js');
+var harvester = require('./harvester')
 
-function app(testMode=false) {
-  var app = express();
-  app.testMode = testMode;
+// We only need to do this once. Bot is a singleton.
+bot.configure({
+  name: "JsonPlaceholder harvester",
+  desc: "Harvests from JSON Placeholder",
+  logging: config.get('logging'),
+  port: config.get('port'),
+  rabbit: config.get('rabbit'),
+  neo4j: config.get('neo4j')
+});
 
-  // An echo endpoint.
-  app.get('/', function (req, res, next) {
-    return res.json(models.harvesterMetadata);
-  });
+// Register our sync endpoint.
+bot.registerEndpoint({
+  "name": "Synchronize",
+  "path": "/sync",
+  "method": "POST",
+  "desc": "Runs a full sync of REST endpoint through the harvester."
+}, function(req,res) {
+  res.send("Starting the REST Harvest")
+  harvester.harvestAll();
+});
 
-  app.post('/sync', function(req,res,next) {
-    res.send("Starting full sync");
-    return harvester.harvestAll();
-  })
+// Register our SQL Sync endpoint.
+bot.registerEndpoint({
+  "name": "Synchronize",
+  "path": "/sqlsync",
+  "method": "POST",
+  "desc": "Runs a full sync of the SQL database through the harvester"
+}, function(req,res) {
+  res.send("Starting the SQL Harvest")
+  harvester.harvestAllSQL();
+});
 
-  app.post('/sqlsync', function(req,res,next) {
-    res.send("Starting full sync of sql database");
-    return harvester.harvestAllSQL();
-  })
-
-  rabbit.subscribe();
-  return app;
-}
-
-///////////////
-// Start the App
-
-// If we're not being imported, just run our app.
-if (!module.parent) {
-  var app = app();
-  
-  http.createServer(app).listen(port);
-  log.info("Listening on " + port);
-}
-
-module.exports = app;
+// Start the bot.
+bot.start();
+bot.changeState({state: "idle"})
