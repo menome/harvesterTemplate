@@ -61,7 +61,7 @@ RABBIT_URL=the URL of the RMQ server. eg. 'amqp://rabbitmq:rabbitmq@rabbit:5672?
 DB_HOST=URL of the database
 DB_USER=DB Username
 DB_PASSWORD=DB Password
-DB_DATABASE=Name of the SQL database on the server.
+DB_NAME=Name of the SQL database on the server.
 ```
 
 #### Example JSON Configuration:
@@ -76,7 +76,7 @@ DB_DATABASE=Name of the SQL database on the server.
     "host": "localhost",
     "user": "root", 
     "password": "password",
-    "database": "world"
+    "dbname": "world"
   },
   "apiUrl": "https://jsonplaceholder.typicode.com"
 }
