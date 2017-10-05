@@ -6,7 +6,7 @@
 var rp = require('request-promise');
 var mysql = require('mysql');
 var models = require('./models');
-var bot = require('botframework')
+var bot = require('@menome/botframework')
 
 module.exports = {
   harvestAll,

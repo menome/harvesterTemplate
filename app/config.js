@@ -5,7 +5,7 @@
 "use strict";
 var convict = require('convict');
 var fs = require('fs');
-var bot = require('botframework')
+var bot = require('@menome/botframework')
 
 // Define a schema
 var config = convict({

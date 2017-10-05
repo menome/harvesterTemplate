@@ -3,7 +3,7 @@
  * Bot entrypoint. Initialize, configure, create HTTP endpoints, etc.
  */
 "use strict";
-var bot = require('botframework')
+var bot = require('@menome/botframework')
 var models = require('./models.js')
 var config = require('./config.js');
 var harvester = require('./harvester')
