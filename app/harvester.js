@@ -81,7 +81,7 @@ function getSql(client, query, transformFunc) {
     client.query(query, function (err,results) {
       if(err) throw err;
       results.forEach((itm) => {
-        rabbit.publishMessage(transformFunc(itm));
+        bot.rabbitPublish(transformFunc(itm));
         return resolve(itm);
       })
     });
