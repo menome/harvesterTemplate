@@ -25,7 +25,12 @@ bot.registerEndpoint({
   "method": "POST",
   "desc": "Runs a full sync of REST endpoint through the harvester."
 }, function(req,res) {
-  res.send("Starting the REST Harvest")
+  res.send(
+    bot.responseWrapper({
+      status: "success",
+      message: "Starting the REST Harvest"
+    })
+  )
   harvester.harvestAll();
 });
 
@@ -36,7 +41,12 @@ bot.registerEndpoint({
   "method": "POST",
   "desc": "Runs a full sync of the SQL database through the harvester"
 }, function(req,res) {
-  res.send("Starting the SQL Harvest")
+  res.send(
+    bot.responseWrapper({
+      status: "success",
+      message: "Starting the SQL Harvest"
+    })
+  )
   harvester.harvestAllSQL();
 });
 
